@@ -1,10 +1,6 @@
 ---
-- hosts: ansiblemaster
-  remote_user: root
+- name: Managing Supervisord Conf file
+  copy: src=supervisord.conf dest=/etc/supervisor/conf.d/chaosmonkey.conf
 
-  tasks:
-    - name: Managing Supervisord Conf file
-      file: src=supervisord.conf dest=/etc/supervisord.conf
-
- # Restart chaosmonkey, reading supervisorctl configuration from a specified file.
-    - supervisorctl: name=chaosmonkey state=restarted config=/etc/supervisord.conf
+# Restart chaosmonkey, reading supervisorctl configuration from a specified file.
+- supervisorctl: name=chaosmonkey state=restarted config=/etc/supervisor/supervisord.conf

@@ -1,16 +1,16 @@
 ---
-- hosts: ansiblemaster
-  remote_user: root
+- name: Managing the aws config file.
+  file: path=/root/.aws state=directory 
 
-  tasks:
-    - name: Managing the aws config file.
-      file: path=/root/.aws state=directory src=awsconfig dest=/root/.aws/config mode=0600
+- name: Copying the aws config file.
+  copy: src=awsconfig dest=/root/.aws/config mode=0600 
 
 # Install awscli package.
-    - pip: name=awscli
+- pip: name=awscli
 
-    - name: Running AWS SDB.
-      shell: aws sdb create-domain --domain SIMIAN_ARMY  
+# Install aws sdb.
+- name: Running AWS SDB.
+  shell: aws sdb create-domain --domain SIMIAN_ARMY  
 
 # Setup Auto scaling group.
 

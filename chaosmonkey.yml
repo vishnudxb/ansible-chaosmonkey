@@ -1,5 +1,5 @@
 ---
- - name: update ssh keys
+ - name: Running Chaos monkey
    hosts: ansiblemaster
    remote_user: root
    roles:
