@@ -1,0 +1,41 @@
+---
+- hosts: ansiblemaster
+  remote_user: root
+
+  tasks:
+    - name: Updates apt cache
+      apt: update_cache=true
+
+    - name: Installs necessary packages
+      apt: pkg={{ item }} state=latest 
+      apt_repository: repo='ppa:webupd8team/java' 
+      with_items:
+        - oracle-java8-installer
+        - git
+
+    - name: Install Chaos Monkey on all systems.
+      git: repo=git@github.com:Netflix/SimianArmy.git version=master accept_hostkey=True dest=/opt/
+
+    - name: Managing the chaos.properties file.
+      file: src=chaos.properties dest=/opt/SimianArmy/src/main/resources/chaos.properties mode=0644 
+
+    - name: Managing the client.properties file.
+      file: src=client.properties dest=/opt/SimianArmy/src/main/resources/client.properties mode=0644 
+
+    - name: Managing the simianarmy.properties file.
+      file: src=simianarmy.properties dest=/opt/SimianArmy/src/main/resources/simianarmy.properties mode=0644 
+
+    - name: Managing the janitor.properties file.
+      file: src=janitor.properties dest=/opt/SimianArmy/src/main/resources/janitor.properties mode=0644 
+
+    - name: Managing the conformity.properties file.
+      file: src=conformity.properties dest=/opt/SimianArmy/src/main/resources/conformity.properties mode=0644 
+
+    - name: Managing the volumeTagging.properties file.
+      file: src=volumeTagging.properties dest=/opt/SimianArmy/src/main/resources/volumeTagging.properties mode=0644 
+
+    - name: Managing the build.gradle file.
+      file: src=build.gradle dest=/opt/SimianArmy/build.gradle mode=0644 
+
+    - name: Running Chaos Gradlew build.
+      shell: cd /opt/SimianArmy && ./gradlew build

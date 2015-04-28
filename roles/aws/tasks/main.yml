@@ -1,0 +1,39 @@
+---
+- hosts: ansiblemaster
+  remote_user: root
+
+  tasks:
+    - name: Managing the aws config file.
+      file: path=/root/.aws state=directory src=awsconfig dest=/root/.aws/config mode=0600
+
+# Install awscli package.
+    - pip: name=awscli
+
+    - name: Running AWS SDB.
+      shell: aws sdb create-domain --domain SIMIAN_ARMY  
+
+# Setup Auto scaling group.
+
+#    - name: create launch config
+#      ec2_lc:
+#        name: autoscale-1
+#        image_id: ami-d6e7c084
+#        key_name: mykey
+#        region: ap-southeast-1
+#        security_groups: sg-12234yoursecgp
+#        instance_type: t1.micro
+#        assign_public_ip: yes
+
+#    - ec2_asg:
+#        name: autoscale-1
+#        launch_config_name: autoscale-1
+#        health_check_period: 120
+#        health_check_type: ELB
+#        replace_all_instances: yes
+#        min_size: 2
+#        max_size: 5
+#        desired_capacity: 2
+#        region: ap-southeast-1
+#        availability_zones: ap-southeast-1a,ap-southeast-1b
+#        load_balancers: YOUR_ELB_NAME
+

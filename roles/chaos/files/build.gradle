@@ -1,0 +1,67 @@
+plugins {
+    id 'nebula.netflixoss' version '2.2.9'
+    id 'net.saliman.cobertura' version '2.2.7'
+}
+
+// Establish version and status
+ext.githubProjectName = 'SimianArmy'
+group = "com.netflix.${project.name}"
+apply plugin:'eclipse-wtp'
+
+repositories { 
+    mavenLocal()
+    mavenCentral()
+}
+
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+dependencies {
+    // for the VMWareClient
+    compile 'com.cloudbees.thirdparty:vijava:5.0.0'
+
+    // for DB support outside of AWS (SimpleDB not available)
+    compile 'org.mapdb:mapdb:0.9.5'
+
+    compile 'com.sun.jersey:jersey-core:1.11'
+    compile 'com.sun.jersey:jersey-servlet:1.11'
+    compile 'org.slf4j:slf4j-api:1.6.4'
+    compile 'org.codehaus.jackson:jackson-core-asl:1.9.2'
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.2'
+    compile('com.netflix.eureka:eureka-client:1.1.22') {
+        exclude group: 'com.sun.jersey', module: 'jersey-bundle'
+    }
+    compile 'com.amazonaws:aws-java-sdk:1.8.11'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'com.google.guava:guava:11.0.2'
+    compile 'org.apache.httpcomponents:httpclient:4.3'
+    compile 'org.jclouds.driver:jclouds-jsch:1.6.0'
+    compile 'org.jclouds.api:ec2:1.6.0'
+
+    testCompile 'org.testng:testng:6.3.1'
+    testCompile 'org.mockito:mockito-core:1.8.5'
+
+    runtime 'org.slf4j:slf4j-log4j12:1.6.1'
+
+    providedCompile 'javax.servlet:servlet-api:2.5'
+}
+
+test {
+    useTestNG()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint" << "-Werror"
+}
+
+artifacts {
+    archives tasks.jar
+}
+import nl.javadude.gradle.plugins.license.License
+tasks.withType(License).each { licenseTask ->
+    licenseTask.exclude '**/*.json'
+    licenseTask.exclude '**/*.properties'
+}
+jettyRun { 
+  httpPort = 9000 
+}

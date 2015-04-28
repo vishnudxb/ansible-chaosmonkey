@@ -1,0 +1,8 @@
+---
+ - name: update ssh keys
+   hosts: ansiblemaster
+   remote_user: root
+   roles:
+     - aws
+     - chaos
+     - supervisor
